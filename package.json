@@ -1,0 +1,21 @@
+{
+  "name": "node-red-contrib-uikit",
+  "version": "0.0.1",
+  "description": "test",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kazuhitoyokoi/node-red-contrib-uikit.git"
+  },
+  "keywords": [
+    "node-red",
+    "uikit",
+    "react",
+    "material-ui"
+  ],
+  "author": "Kazuhito Yokoi <kazuhitoyokoi@nodered.jp>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "node-red-contrib-uikit-slider": "file://node-red-contrib-uikit-slider-0.0.1.tgz",
+    "node-red-contrib-uikit-chart": "file://node-red-contrib-uikit-chart-0.0.1.tgz"
+  }
+}
