@@ -15,7 +15,7 @@
   "author": "Kazuhito Yokoi <kazuhitoyokoi@nodered.jp>",
   "license": "Apache-2.0",
   "dependencies": {
-    "node-red-contrib-uikit-slider": "file://node-red-contrib-uikit-slider-0.0.1.tgz",
-    "node-red-contrib-uikit-chart": "file://node-red-contrib-uikit-chart-0.0.1.tgz"
+    "node-red-contrib-uikit-slider": "file:./node-red-contrib-uikit-slider",
+    "node-red-contrib-uikit-chart": "file:./node-red-contrib-uikit-chart"
   }
 }
