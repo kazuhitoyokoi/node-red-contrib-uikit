@@ -59,7 +59,13 @@
                 }
             }
         ],
-        "meta": {},
+        "meta": {
+            "module": "node-red-contrib-uikit-chart",
+            "type": "chart",
+            "version": "0.0.1",
+            "author": "Kazuhito Yokoi <kazuhitoyokoi@nodered.jp>",
+            "license": "Apache-2.0"
+        },
         "color": "#77C6CC",
         "icon": "node-red/status.svg"
     },
