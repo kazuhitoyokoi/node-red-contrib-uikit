@@ -1,0 +1,561 @@
+[
+    {
+        "id": "54c1e80336f93e12",
+        "type": "subflow",
+        "name": "endpoint",
+        "info": "",
+        "category": "deprecated",
+        "in": [],
+        "out": [],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
+    },
+    {
+        "id": "bf132f77860c7bfc",
+        "type": "http in",
+        "z": "54c1e80336f93e12",
+        "name": "",
+        "url": "/uikit",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 140,
+        "y": 260,
+        "wires": [
+            [
+                "ee2530bd1bea6bd6"
+            ]
+        ]
+    },
+    {
+        "id": "3fc876517efca407",
+        "type": "http response",
+        "z": "54c1e80336f93e12",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 610,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d77fb6198dd418e2",
+        "type": "template",
+        "z": "54c1e80336f93e12",
+        "name": "HTML",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<html>\n<head>\n  <title>{{{env.NR_FLOW_NAME}}}</title>\n  <script src=\"https://unpkg.com/react/umd/react.development.js\"></script>\n  <script src=\"https://unpkg.com/react-dom/umd/react-dom.development.js\"></script>\n  <script src=\"https://unpkg.com/@mui/material/umd/material-ui.development.js\"></script>\n  <script src=\"https://unpkg.com/babel-standalone/babel.min.js\"></script>\n  <script src=\"https://unpkg.com/plotly.js-dist/plotly.js\"></script>\n  <script src=\"https://unpkg.com/react-plotly.js/dist/create-plotly-component.min.js\"></script>\n  <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">\n  <script type=\"text/babel\">\n    var data, setData;\n    var plotData, setPlotData;\n    var ws = new WebSocket('ws' + (location.protocol === 'https:' ? 's' : '') + '://' + location.host + '/ws4uikit');\n    ws.onmessage = function (e) {\n      var json = JSON.parse(e.data);\n      if (json.type === 'chart') {\n        setPlotData(json.payload);\n      } else {\n        setData({...data, ...json});\n      }\n      console.log(json);\n    };\n    ws.onclose = function (e) {\n      setTimeout(function () { window.location.reload(); }, 300);\n    };\n    function App() {\n      [data, setData] = React.useState({});\n      [plotData, setPlotData] = React.useState([]);\n      var { Button, Switch, Typography, TextField, CircularProgress, Slider, Snackbar, Grid, Box, AppBar, Toolbar } = MaterialUI;\n      var Plot = createPlotlyComponent.default(Plotly);\n      return (<div>{{{payload}}}</div>);\n    };\n    var root = ReactDOM.createRoot(document.getElementById('root'));\n    root.render(<App />);\n    setTimeout(function () { {{{init}}} }, 100);\n  </script>\n</head>\n<body><div id=\"root\" /></body>\n</html>",
+        "output": "str",
+        "x": 470,
+        "y": 260,
+        "wires": [
+            [
+                "3fc876517efca407"
+            ]
+        ]
+    },
+    {
+        "id": "ee2530bd1bea6bd6",
+        "type": "function",
+        "z": "54c1e80336f93e12",
+        "name": "create jsx",
+        "func": "var init = '';\nif (global.get('init')) {\n    for (var i = 0; i < global.get('init').length; i++) {\n        var tmp = global.get('init[' + i + ']');\n        if (tmp) {\n            init += tmp;\n        }\n    }\n}\nmsg.init = init;\n\nvar jsx = '';\nif (global.get('jsx')) {\n    for (var i = 0; i < global.get('jsx').length; i++) {\n        var tmp = global.get('jsx[' + i + ']');\n        if (tmp) {\n            jsx += tmp;\n        }\n    }\n}\nmsg.payload = '<Grid container spacing={1}><AppBar position=\"static\"><Toolbar><Typography>'\n            + env.get('NR_FLOW_NAME').replace(/</g, '&lt;').replace(/>/g, '&gt;')\n            + '</Typography></Toolbar></AppBar>' + jsx + '</Grid>';\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 260,
+        "wires": [
+            [
+                "d77fb6198dd418e2"
+            ]
+        ]
+    },
+    {
+        "id": "d256fb23a6046d16",
+        "type": "inject",
+        "z": "54c1e80336f93e12",
+        "name": "clear context",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.1",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [
+                "f1b250323f03ff6f"
+            ]
+        ]
+    },
+    {
+        "id": "f1b250323f03ff6f",
+        "type": "change",
+        "z": "54c1e80336f93e12",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "init",
+                "pt": "global"
+            },
+            {
+                "t": "delete",
+                "p": "jsx",
+                "pt": "global"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "415ffaca442298e7",
+        "type": "comment",
+        "z": "54c1e80336f93e12",
+        "name": "Clear global context after deploying flow immediately",
+        "info": "",
+        "x": 280,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "86619e9c23d0d00c",
+        "type": "comment",
+        "z": "54c1e80336f93e12",
+        "name": "Generate HTML with JSX generated from `jsx` in global context",
+        "info": "",
+        "x": 310,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "a2656ed66f101c58",
+        "type": "http in",
+        "z": "54c1e80336f93e12",
+        "name": "",
+        "url": "/export",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 320,
+        "wires": [
+            [
+                "4e7ca24d2928f980"
+            ]
+        ]
+    },
+    {
+        "id": "b02775cb637a114d",
+        "type": "template",
+        "z": "54c1e80336f93e12",
+        "name": "index.js",
+        "field": "indexJs",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport { Button, Switch, Typography, TextField, CircularProgress, Slider, Snackbar, Grid, Box, AppBar, Toolbar } from '@mui/material';\nimport Plot from 'react-plotly.js';\n\nfunction App() {\n    var data, setData;\n    var plotData, setPlotData;\n    [data, setData] = React.useState({});\n    [plotData, setPlotData] = React.useState([]);\n    var ws = new WebSocket('ws://localhost:1880/ws4uikit');\n    ws.onmessage = function (e) {\n        var json = JSON.parse(e.data);\n        if (json.type === 'chart') {\n            setPlotData(json.payload);\n        } else {\n            setData({...data, ...json});\n        }\n    };\n    ws.onclose = function (e) {\n        setTimeout(function () { window.location.reload(); }, 300);\n    };\n    return (<div>{{{payload}}}</div>);\n    setTimeout(function () { {{{init}}} }, 100);\n}\n\nconst root = ReactDOM.createRoot(document.getElementById('root'));\nroot.render(<React.StrictMode><App /></React.StrictMode>);",
+        "output": "str",
+        "x": 480,
+        "y": 320,
+        "wires": [
+            [
+                "d432e22b7bf6d605"
+            ]
+        ]
+    },
+    {
+        "id": "b871b4ef2140202f",
+        "type": "function",
+        "z": "54c1e80336f93e12",
+        "name": "generate zip",
+        "func": "var zip = new JSZip();\nzip.file(\"dashboard-app/src/index.js\", msg.indexJs);\nzip.file(\"dashboard-app/public/index.html\", msg.indexHtml);\nzip.file(\"dashboard-app/package.json\", msg.packageJson);\nzip.generateAsync({ type: \"nodebuffer\" }).then(function (content) {\n    msg.payload = content;\n    node.send(msg);\n});",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "JSZip",
+                "module": "jszip"
+            }
+        ],
+        "x": 530,
+        "y": 380,
+        "wires": [
+            [
+                "258fc2ba5a704c14"
+            ]
+        ]
+    },
+    {
+        "id": "258fc2ba5a704c14",
+        "type": "http response",
+        "z": "54c1e80336f93e12",
+        "name": "",
+        "statusCode": "",
+        "headers": {
+            "Content-Type": "application/zip",
+            "Content-Disposition": "attachment"
+        },
+        "x": 690,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "a539cd72fa502b41",
+        "type": "template",
+        "z": "54c1e80336f93e12",
+        "name": "package.json",
+        "field": "packageJson",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "{\n  \"name\": \"dashboard-app\",\n  \"version\": \"0.0.1\",\n  \"dependencies\": {\n    \"@emotion/styled\": \"11.10.4\",\n    \"@mui/material\": \"5.10.10\",\n    \"plotly.js\": \"2.16.1\",\n    \"react\": \"18.2.0\",\n    \"react-dom\": \"18.2.0\",\n    \"react-plotly.js\": \"2.6.0\",\n    \"react-scripts\": \"5.0.1\"\n  },\n  \"scripts\": {\n    \"start\": \"react-scripts start\",\n    \"build\": \"react-scripts build\"\n  },\n  \"browserslist\": {\n    \"production\": [\n      \">0.2%\",\n      \"not dead\",\n      \"not op_mini all\"\n    ],\n    \"development\": [\n      \"last 1 chrome version\",\n      \"last 1 firefox version\",\n      \"last 1 safari version\"\n    ]\n  }\n}",
+        "output": "str",
+        "x": 340,
+        "y": 380,
+        "wires": [
+            [
+                "b871b4ef2140202f"
+            ]
+        ]
+    },
+    {
+        "id": "d432e22b7bf6d605",
+        "type": "template",
+        "z": "54c1e80336f93e12",
+        "name": "index.html",
+        "field": "indexHtml",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<html><body><div id=\"root\"></div></body></html>",
+        "output": "str",
+        "x": 150,
+        "y": 380,
+        "wires": [
+            [
+                "a539cd72fa502b41"
+            ]
+        ]
+    },
+    {
+        "id": "4e7ca24d2928f980",
+        "type": "function",
+        "z": "54c1e80336f93e12",
+        "name": "create jsx",
+        "func": "var init = '';\nif (global.get('init')) {\n    for (var i = 0; i < global.get('init').length; i++) {\n        var tmp = global.get('init[' + i + ']');\n        if (tmp) {\n            init += tmp;\n        }\n    }\n}\nmsg.init = init;\n\nvar jsx = '';\nif (global.get('jsx')) {\n    for (var i = 0; i < global.get('jsx').length; i++) {\n        var tmp = global.get('jsx[' + i + ']');\n        if (tmp) {\n            jsx += tmp;\n        }\n    }\n}\nmsg.payload = '<Grid container spacing={1}><AppBar position=\"static\"><Toolbar><Typography>'\n    + env.get('NR_FLOW_NAME').replace(/</g, '&lt;').replace(/>/g, '&gt;')\n    + '</Typography></Toolbar></AppBar>' + jsx + '</Grid>';\n\nmsg.payload = jsBeautify.html(msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "jsBeautify",
+                "module": "js-beautify"
+            }
+        ],
+        "x": 320,
+        "y": 320,
+        "wires": [
+            [
+                "b02775cb637a114d"
+            ]
+        ]
+    },
+    {
+        "id": "9c0a52e2454bab6f",
+        "type": "subflow",
+        "name": "slider",
+        "info": "[Dashboard page](uikit)",
+        "category": "uikit",
+        "in": [],
+        "out": [
+            {
+                "x": 840,
+                "y": 260,
+                "wires": [
+                    {
+                        "id": "059c4bfd1f783c27",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "order",
+                "type": "num",
+                "value": "6",
+                "ui": {
+                    "icon": "font-awesome/fa-sort-numeric-asc",
+                    "type": "spinner",
+                    "opts": {
+                        "min": 0,
+                        "max": 100
+                    }
+                }
+            },
+            {
+                "name": "xs",
+                "type": "num",
+                "value": "4",
+                "ui": {
+                    "icon": "font-awesome/fa-arrows-h",
+                    "type": "spinner",
+                    "opts": {
+                        "min": 1,
+                        "max": 12
+                    }
+                }
+            },
+            {
+                "name": "label",
+                "type": "str",
+                "value": "label",
+                "ui": {
+                    "icon": "font-awesome/fa-i-cursor",
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {
+            "module": "@node-red-contrib-uikit/slider",
+            "type": "slider",
+            "version": "0.0.1",
+            "author": "Kazuhito Yokoi <kazuhitoyokoi@nodered.jp>",
+            "license": "Apache-2.0"
+        },
+        "color": "#B0DFE3",
+        "icon": "font-awesome/fa-sliders"
+    },
+    {
+        "id": "385b7d35500651b6",
+        "type": "inject",
+        "z": "9c0a52e2454bab6f",
+        "name": "add component",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "0.2",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "a2c449c8cfa5c38c"
+            ]
+        ]
+    },
+    {
+        "id": "a2c449c8cfa5c38c",
+        "type": "function",
+        "z": "9c0a52e2454bab6f",
+        "name": "add Slider",
+        "func": "var subflowId = env.get('NR_NODE_PATH').split('/').reverse()[1];\n\nif (global.get('jsx[' + env.get('order') + ']')) {\n    node.warn(\"order conflicted\");\n}\n\nglobal.set('jsx[' + env.get('order') + ']',\n           '<Grid item xs={' + env.get('xs') + '}>'\n         + '<Typography>' + env.get('label') + '</Typography>'\n         + '<Slider onChange={(e,v) => ws.send(JSON.stringify({\"id\":\"' + subflowId + '\",\"payload\":v}))} />'\n         + '</Grid>');\n\nreturn msg;",
+        "outputs": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "0631f1904d640c1e",
+        "type": "subflow:54c1e80336f93e12",
+        "z": "9c0a52e2454bab6f",
+        "name": "",
+        "x": 560,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "190d3807f2b4cf7b",
+        "type": "comment",
+        "z": "9c0a52e2454bab6f",
+        "name": "Add the UI component to `jsx` in the global context",
+        "info": "",
+        "x": 270,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "726db7b798868a73",
+        "type": "comment",
+        "z": "9c0a52e2454bab6f",
+        "name": "Endpoint for the dashboard",
+        "info": "",
+        "x": 620,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "11df2cac00d5b704",
+        "type": "websocket in",
+        "z": "9c0a52e2454bab6f",
+        "name": "",
+        "server": "caaba1e23b7b4c41",
+        "client": "",
+        "x": 150,
+        "y": 260,
+        "wires": [
+            [
+                "b007e747dc67988c"
+            ]
+        ]
+    },
+    {
+        "id": "059c4bfd1f783c27",
+        "type": "change",
+        "z": "9c0a52e2454bab6f",
+        "name": "Set timestamp",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 700,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "015d616a4e3bf693",
+        "type": "comment",
+        "z": "9c0a52e2454bab6f",
+        "name": "UI specific handling",
+        "info": "",
+        "x": 170,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "f29f0c1b62c53d1c",
+        "type": "switch",
+        "z": "9c0a52e2454bab6f",
+        "name": "check subflow id",
+        "property": "payload.id",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "$reverse($env('NR_NODE_PATH').$split('/'))[1]",
+                "vt": "jsonata"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 490,
+        "y": 260,
+        "wires": [
+            [
+                "059c4bfd1f783c27"
+            ]
+        ]
+    },
+    {
+        "id": "b007e747dc67988c",
+        "type": "json",
+        "z": "9c0a52e2454bab6f",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "f29f0c1b62c53d1c"
+            ]
+        ]
+    },
+    {
+        "id": "caaba1e23b7b4c41",
+        "type": "websocket-listener",
+        "path": "/ws4uikit",
+        "wholemsg": "false"
+    },
+    {
+        "id": "e50fc03bbbd10684",
+        "type": "subflow:9c0a52e2454bab6f",
+        "z": "b721739da87e9e5e",
+        "name": "",
+        "env": [
+            {
+                "name": "order",
+                "value": "1",
+                "type": "num"
+            },
+            {
+                "name": "label",
+                "value": "value",
+                "type": "str"
+            }
+        ],
+        "x": 170,
+        "y": 160,
+        "wires": [
+            [
+                "4ef7b97f68c4fe6d",
+                "ab802bfd236aba7c",
+                "e231797a03125ed3"
+            ]
+        ]
+    }
+]
