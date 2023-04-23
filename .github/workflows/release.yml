@@ -12,12 +12,9 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: |
           npm install -g node-red-nodegen
-          node-red-nodegen slider.json --tgz
-          cd node-red-contrib-*/
-          cat package.json | jq ".repository.type|=\"git\"|.repository.url|=\"https://github.com/$GITHUB_REPOSITORY.git\"" > tmp; mv tmp package.json
-          cat package.json | jq ".bugs.url|=\"https://github.com/$GITHUB_ACTOR\"" > tmp; mv tmp package.json
-          mv ../examples . || true
-          mv ../README.md . || true
+          node-red-nodegen slider.json
+          node-red-nodegen chart.json
+          npm pack
         #  npm publish
         #env:
         #  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
