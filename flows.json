@@ -486,7 +486,7 @@
             }
         ],
         "meta": {
-            "module": "@node-red-contrib-uikit/slider",
+            "module": "node-red-contrib-uikit-slider",
             "type": "slider",
             "version": "0.0.1",
             "author": "Kazuhito Yokoi <kazuhitoyokoi@nodered.jp>",
